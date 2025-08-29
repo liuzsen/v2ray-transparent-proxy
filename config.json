@@ -1,0 +1,289 @@
+{
+    "log": {
+        "loglevel": "debug"
+    },
+    "inbounds": [
+        {
+            "tag": "transparent",
+            "port": 12345,
+            "protocol": "dokodemo-door",
+            "settings": {
+                "network": "tcp,udp",
+                "followRedirect": true
+            },
+            "sniffing": {
+                "enabled": true,
+                "destOverride": [
+                    "http",
+                    "tls"
+                ]
+            },
+            "streamSettings": {
+                "sockopt": {
+                    "tproxy": "tproxy",
+                    "mark": 255
+                }
+            }
+        },
+        {
+            "port": 1080,
+            "protocol": "socks",
+            "sniffing": {
+                "enabled": true,
+                "destOverride": [
+                    "http",
+                    "tls"
+                ]
+            },
+            "settings": {
+                "auth": "noauth"
+            }
+        }
+    ],
+    "outbounds": [
+        {
+            "tag": "proxy",
+            "protocol": "vless",
+            "settings": {
+                "vnext": [
+                    {
+                        "address": "usa.visa.com",
+                        "port": 443,
+                        "users": [
+                            {
+                                "id": "268b5393-205c-73c3-b329-77157f88026f",
+                                "email": "t@t.tt",
+                                "security": "auto",
+                                "encryption": "none"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "streamSettings": {
+                "network": "ws",
+                "security": "tls",
+                "tlsSettings": {
+                    "allowInsecure": false,
+                    "serverName": "newip.liuzsen.fun",
+                    "fingerprint": "randomized"
+                },
+                "wsSettings": {
+                    "path": "/?ed=2560",
+                    "host": "newip.liuzsen.fun",
+                    "headers": {
+                        "Host": "newip.liuzsen.fun"
+                    }
+                },
+                "sockopt": {
+                    "mark": 255
+                }
+            },
+            "mux": {
+                "enabled": false,
+                "concurrency": 5
+            }
+        },
+        {
+            "tag": "proxy2",
+            "protocol": "vless",
+            "settings": {
+                "vnext": [
+                    {
+                        "address": "35.212.252.11",
+                        "port": 53096,
+                        "users": [
+                            {
+                                "id": "902a9d13-2690-4e85-9313-56222c00fd86",
+                                "email": "t@t.tt",
+                                "security": "auto",
+                                "encryption": "none",
+                                "flow": "xtls-rprx-vision"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "streamSettings": {
+                "network": "tcp",
+                "security": "reality",
+                "realitySettings": {
+                    "serverName": "www.yahoo.com",
+                    "fingerprint": "chrome",
+                    "show": false,
+                    "publicKey": "_oXj0lswTze6sj_sY4jXva-lPMuKR0EbaCVrPXngD2I",
+                    "shortId": "3b32f094",
+                    "spiderX": "",
+                    "mldsa65Verify": ""
+                },
+                "sockopt": {
+                    "mark": 255
+                }
+            },
+            "mux": {
+                "enabled": false,
+                "concurrency": -1
+            }
+        },
+        {
+            "tag": "direct",
+            "protocol": "freedom",
+            "settings": {
+                "domainStrategy": "UseIP"
+            },
+            "streamSettings": {
+                "sockopt": {
+                    "mark": 255
+                }
+            }
+        },
+        {
+            "tag": "block",
+            "protocol": "blackhole",
+            "settings": {
+                "response": {
+                    "type": "http"
+                }
+            }
+        },
+        {
+            "tag": "dns-out",
+            "protocol": "dns",
+            "streamSettings": {
+                "sockopt": {
+                    "mark": 255
+                }
+            }
+        }
+    ],
+    "dns": {
+        "servers": [
+            {
+                "address": "223.5.5.5",
+                "port": 53,
+                "domains": [
+                    "geosite:cn",
+                    "ntp.org",
+                    "newip.liuzsen.fun",
+                    "domain:usa.visa.com",
+                    "domain:usa.visa.com.cdn.cloudflare.net"
+                ]
+            },
+            {
+                "address": "114.114.114.114",
+                "port": 53,
+                "domains": [
+                    "geosite:cn",
+                    "ntp.org",
+                    "newip.liuzsen.fun",
+                    "domain:usa.visa.com",
+                    "domain:usa.visa.com.cdn.cloudflare.net"
+                ]
+            },
+            {
+                "address": "8.8.8.8",
+                "port": 53,
+                "domains": [
+                    "geosite:geolocation-!cn"
+                ]
+            },
+            {
+                "address": "1.1.1.1",
+                "port": 53,
+                "domains": [
+                    "geosite:geolocation-!cn"
+                ]
+            }
+        ]
+    },
+    "routing": {
+        "domainStrategy": "IPOnDemand",
+        "rules": [
+            {
+                "type": "field",
+                "outboundTag": "direct",
+                "domain": [
+                    "usa.visa.com",
+                    "usa.visa.com.cdn.cloudflare.net"
+                ]
+            },
+            {
+                "type": "field",
+                "outboundTag": "proxy",
+                "domain": [
+                    "domain:google.com"
+                ]
+            },
+            {
+                "type": "field",
+                "inboundTag": [
+                    "transparent"
+                ],
+                "port": 53,
+                "network": "udp",
+                "outboundTag": "dns-out"
+            },
+            {
+                "type": "field",
+                "inboundTag": [
+                    "transparent"
+                ],
+                "port": 123,
+                "network": "udp",
+                "outboundTag": "direct"
+            },
+            {
+                "type": "field",
+                "ip": [
+                    "223.5.5.5",
+                    "114.114.114.114"
+                ],
+                "outboundTag": "direct"
+            },
+            {
+                "type": "field",
+                "ip": [
+                    "8.8.8.8",
+                    "1.1.1.1"
+                ],
+                "outboundTag": "proxy"
+            },
+            {
+                "type": "field",
+                "domain": [
+                    "geosite:category-ads-all"
+                ],
+                "outboundTag": "block"
+            },
+            {
+                "type": "field",
+                "protocol": [
+                    "bittorrent"
+                ],
+                "outboundTag": "direct"
+            },
+            {
+                "type": "field",
+                "ip": [
+                    "geoip:private",
+                    "geoip:cn"
+                ],
+                "outboundTag": "direct"
+            },
+            {
+                "type": "field",
+                "domain": [
+                    "geosite:cn"
+                ],
+                "outboundTag": "direct"
+            },
+            {
+                "type": "field",
+                "domain": [
+                    "geosite:cn"
+                ],
+                "outboundTag": "direct"
+            }
+        ]
+    }
+}
